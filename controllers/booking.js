@@ -7,18 +7,16 @@ exports.createBooking = (req, res) => {
     let studentName = req.params.studentName;
 
     Tutor.findOne({ name: tutorName }).exec((err, tutor) => {
-        if (err || !tutor) {
-            return res.status(400).json({
-                error: err
-            });
-        }
+
+        if (err) return res.status(400).json({ error: 'actual error' })
+        if (!tutor) return res.status(400).json({ error: 'no tutor found' })
 
         let { subject, time } = req.body;
 
         let booking = {
             studentName,
             subject,
-            time: new Date(time.year, time.month, time.day)
+            time: new Date(time.year, time.month, time.day, time.hour)
         }
 
         tutor.bookings.push(booking)
@@ -39,10 +37,13 @@ exports.createBooking = (req, res) => {
         let booking = {
             tutorName,
             subject,
-            time: new Date(time.year, time.month, time.day)
+            time: new Date(time.year, time.month, time.day, time.hour)
         }
 
-        res.json(booking)
+        // res.json({
+        //     hour: time.hour,
+        //     date: new Date(2020, 4, 7, time.hour).getHours()
+        // })
 
         student.bookings.push(booking)
 

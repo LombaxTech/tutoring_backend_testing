@@ -6,34 +6,20 @@ const { createBooking } = require('../controllers/booking');
 
 router.post('/booking/:studentName/:tutorName', createBooking)
 
-router.post('/tutor/booking/:tutorName', (req, res) => {
+router.get('/bookings/:tutorName', (req, res) => {
+
     let tutorName = req.params.tutorName;
+
     Tutor.findOne({ name: tutorName }).exec((err, tutor) => {
-        if (err || !tutor) {
-            return res.status(400).json({
-                error: err
-            });
-        }
 
-        const { studentName, subject, time } = req.body;
+        if (err) return res.status(400).json({ error: `error of: ${err}` })
+        if (!tutor) return res.status(400).json({ error: 'no tutor found' })
 
-        // res.json({
-        //     studentName, subject, time
-        // })
+        let bookings = tutor.bookings;
+        res.send(bookings);
 
-        // ! This is only for date in POSTMAN 
-
-        tutor.bookings.push({
-            studentName,
-            subject,
-            time: new Date(time.year, time.month, time.day)
-        })
-
-        tutor.save()
-            .then(result => res.send(result))
-            .catch(err => res.result(err))
     })
-})
 
+})
 
 module.exports = router;
