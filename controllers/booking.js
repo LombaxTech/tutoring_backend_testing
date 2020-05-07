@@ -54,3 +54,19 @@ exports.createBooking = (req, res) => {
     })
 
 }
+
+exports.getBookings = (req, res) => {
+
+    let tutorName = req.params.tutorName;
+
+    Tutor.findOne({ name: tutorName }).exec((err, tutor) => {
+
+        if (err) return res.status(400).json({ error: `error of: ${err}` })
+        if (!tutor) return res.status(400).json({ error: 'no tutor found' })
+
+        let bookings = tutor.bookings;
+        res.send(bookings);
+
+    })
+
+}
