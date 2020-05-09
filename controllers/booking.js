@@ -1,87 +1,48 @@
 const Tutor = require('../models/tutor')
 const Student = require('../models/student')
 
-exports.createBooking = (req, res) => {
+exports.createBooking = async (req, res) => {
 
     let tutorName = req.params.tutorName;
     let studentName = req.params.studentName;
 
-    Tutor.findOne({ name: tutorName }).exec((err, tutor) => {
+    try {
+        const tutor = await Tutor.findOne({ name: tutorName });
+        const student = await Student.findOne({ name: studentName });
 
-        if (err) return res.status(400).json({ error: 'actual error' })
         if (!tutor) return res.status(400).json({ error: 'no tutor found' })
-
-        // TODO: need to check if student also exists here
+        if (!student) return res.status(400).json({ error: 'no student found' })
 
         let { subject, time } = req.body;
-
         let booking = {
             studentName,
             subject,
             time: new Date(time.year, time.month, time.day, time.hour)
         }
 
-        // let booking = {
-        //     studentName,
-        //     subject,
-        //     time
-        // }
-
         tutor.bookings.push(booking)
-
-        tutor.save()
-            .then(result => console.log(result))
-            .catch(err => res.send(err))
-
-    })
-
-    Student.findOne({ name: studentName }).exec((err, student) => {
-
-        if (err) return res.status(400).json({ error: 'actual error' })
-        if (!student) return res.status(400).json({ error: 'no student found' })
-
-        let { subject, time } = req.body;
-
-        let booking = {
-            tutorName,
-            subject,
-            time: new Date(time.year, time.month, time.day, time.hour)
-        }
-
-        // let booking = {
-        //     tutorName,
-        //     subject,
-        //     time
-        // }
-
-
-        // res.json({
-        //     hour: time.hour,
-        //     date: new Date(2020, 4, 7, time.hour).getHours()
-        // })
-
+        let savedBooking = await tutor.save()
         student.bookings.push(booking)
+        savedBooking = await student.save()
 
-        student.save()
-            .then(result => res.send(result))
-            .catch(err => res.send(err))
-
-    })
+        res.send('successful saving of booking')
+    } catch (error) {
+        res.send(`error of: ${error}`)
+    }
 
 }
 
-exports.getBookings = (req, res) => {
+exports.getBookings = async (req, res) => {
 
     let tutorName = req.params.tutorName;
-
-    Tutor.findOne({ name: tutorName }).exec((err, tutor) => {
-
-        if (err) return res.status(400).json({ error: `error of: ${err}` })
+    try {
+        let tutor = await Tutor.findOne({ name: tutorName });
         if (!tutor) return res.status(400).json({ error: 'no tutor found' })
-
         let bookings = tutor.bookings;
         res.send(bookings);
 
-    })
+    } catch (error) {
+        return res.status(400).json({ error: `error of: ${err}` })
+    }
 
 }
