@@ -14,11 +14,19 @@ exports.createBooking = async (req, res) => {
         if (!student) return res.status(400).json({ error: 'no student found' })
 
         let { subject, time } = req.body;
+
+        // let booking = {
+        //     studentName,
+        //     subject,
+        //     time: new Date(time.year, time.month, time.day, time.hour)
+        // }
+
         let booking = {
-            studentName,
+            tutorName,
             subject,
-            time: new Date(time.year, time.month, time.day, time.hour)
+            time
         }
+
 
         tutor.bookings.push(booking)
         let savedBooking = await tutor.save()
