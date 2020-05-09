@@ -11,6 +11,8 @@ exports.createBooking = (req, res) => {
         if (err) return res.status(400).json({ error: 'actual error' })
         if (!tutor) return res.status(400).json({ error: 'no tutor found' })
 
+        // TODO: need to check if student also exists here
+
         let { subject, time } = req.body;
 
         let booking = {
@@ -18,6 +20,12 @@ exports.createBooking = (req, res) => {
             subject,
             time: new Date(time.year, time.month, time.day, time.hour)
         }
+
+        // let booking = {
+        //     studentName,
+        //     subject,
+        //     time
+        // }
 
         tutor.bookings.push(booking)
 
@@ -39,6 +47,13 @@ exports.createBooking = (req, res) => {
             subject,
             time: new Date(time.year, time.month, time.day, time.hour)
         }
+
+        // let booking = {
+        //     tutorName,
+        //     subject,
+        //     time
+        // }
+
 
         // res.json({
         //     hour: time.hour,

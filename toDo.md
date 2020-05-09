@@ -9,3 +9,8 @@
 
 
 [-] Search about population
+[-] Confirmation email when signing up
+
+<!-- ! BUGS TO FIX -->
+
+[-] Create a booking, wrong student name, stil gets created
