@@ -9,7 +9,8 @@ const bookingSchema = new Schema({
 
 const studentSchema = new Schema({
     name: String,
-    bookings: [bookingSchema]
+    bookings: [bookingSchema],
+    cancelledBookings: [bookingSchema]
 })
 
 const studentModel = mongoose.model('student', studentSchema);

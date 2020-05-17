@@ -9,6 +9,7 @@ const bookingSchema = new Schema({
 
 const tutorSchema = new Schema({
     name: String,
+    subjects: [String],
     bookings: [bookingSchema],
     cancelledBookings: [bookingSchema]
 })
